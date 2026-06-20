@@ -380,7 +380,9 @@ export function createDirectToolExecutor(
       uiSession?.sendToolResult(result as unknown as import("@modelcontextprotocol/sdk/types.js").CallToolResult);
 
       if (result.isError) {
-        let errorText = transformMcpContent((result.content ?? []) as McpContent[]).filter(c => c.type === "text").map(c => (c as { text: string }).text).join("\n") || "Tool execution failed";
+        const mcpContent = (result.content ?? []) as McpContent[];
+        const content = transformMcpContent(mcpContent);
+        let errorText = content.filter(c => c.type === "text").map(c => (c as { text: string }).text).join("\n") || "Tool execution failed";
         if (spec.inputSchema) {
           errorText += `\n\nExpected parameters:\n${formatSchema(spec.inputSchema)}`;
         }

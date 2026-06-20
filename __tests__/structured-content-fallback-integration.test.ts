@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// End-to-end coverage for the structuredContent fallback, exercising the
-// real executor and proxy paths rather than the resolveMcpResultContent unit.
+// End-to-end coverage for the structuredContent fallback.
 
 const mocks = vi.hoisted(() => ({
   lazyConnect: vi.fn(),

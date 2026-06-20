@@ -891,7 +891,9 @@ export async function executeCall(
     const result = await resultPromise;
 
     if (result.isError) {
-      const errorText = transformMcpContent((result.content ?? []) as McpContent[])
+      const mcpContent = (result.content ?? []) as McpContent[];
+      const content = transformMcpContent(mcpContent);
+      const errorText = content
         .filter((c) => c.type === "text")
         .map((c) => (c as { text: string }).text)
         .join("\n") || "Tool execution failed";
