@@ -26,7 +26,6 @@ function makeState(callToolResult: unknown, toolName = "tool") {
   };
   return {
     config: { settings: {}, mcpServers: { demo: { command: "demo" } } },
-    // lets the proxy's findToolByName resolve the tool without a real connect
     toolMetadata: new Map([
       ["demo", [{ name: `demo_${toolName}`, originalName: toolName, description: toolName }]],
     ]),
