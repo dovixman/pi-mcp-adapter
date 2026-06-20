@@ -1,9 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// End-to-end coverage for the structuredContent fallback (#113): verifies that
-// the empty-content + structuredContent payload actually reaches the model
-// through the direct-tool executor and the proxy `executeCall` path — not just
-// through the resolveMcpResultContent unit.
+// End-to-end coverage for the structuredContent fallback (#113), exercising the
+// real executor and proxy paths rather than the resolveMcpResultContent unit.
 
 const mocks = vi.hoisted(() => ({
   lazyConnect: vi.fn(),
@@ -13,7 +11,6 @@ const mocks = vi.hoisted(() => ({
 vi.mock("../init.ts", () => ({
   lazyConnect: mocks.lazyConnect,
   getFailureAgeSeconds: mocks.getFailureAgeSeconds,
-  // executeCall pulls these from init.ts; stub the ones the happy path touches.
   updateServerMetadata: vi.fn(),
   updateMetadataCache: vi.fn(),
   updateStatusBar: vi.fn(),
@@ -30,7 +27,7 @@ function makeState(callToolResult: unknown, toolName = "tool") {
   };
   return {
     config: { settings: {}, mcpServers: { demo: { command: "demo" } } },
-    // Populated so the proxy's findToolByName can resolve the tool without a real connect.
+    // lets the proxy's findToolByName resolve the tool without a real connect
     toolMetadata: new Map([
       ["demo", [{ name: `demo_${toolName}`, originalName: toolName, description: toolName }]],
     ]),

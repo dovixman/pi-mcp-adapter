@@ -46,23 +46,11 @@ export function transformMcpContent(content: McpContent[]): ContentBlock[] {
 }
 
 /**
- * Resolve the content blocks for an MCP tool result.
- *
- * Per the MCP spec, `content` is mandatory while `structuredContent` is
- * optional, but some servers return their payload only in `structuredContent`
- * with an empty `content: []`. In that case we serialize `structuredContent`
- * to a text block instead of dropping the data (which would surface as an
- * "(empty result)" to the model). See nicobailon/pi-mcp-adapter#113.
- *
- * Note: when this fallback fires, `structuredContent` is exposed to the model
- * even though the server placed nothing in `content`. Servers should not put
- * data in `structuredContent` that they would not want the model to see.
- *
- * Typed as `Record<string, unknown>` rather than the SDK `CallToolResult`:
- * that type is a union whose `{ toolResult }` variant has no `content`, which
- * makes structural call-site arguments fail to type-check. The runtime guards
- * below validate shape defensively, so the wide type is safe here.
+ * Resolve a tool result's content blocks, falling back to structuredContent
+ * when content is empty (some servers send only structuredContent). See #113.
  */
+// `Record<string, unknown>` (not the SDK `CallToolResult`) because its union
+// has a `{ toolResult }` variant with no `content`; the guards below stay safe.
 export function resolveMcpResultContent(result: Record<string, unknown>): ContentBlock[] {
   const blocks = transformMcpContent((Array.isArray(result.content) ? result.content : []) as McpContent[]);
   if (blocks.length > 0) return blocks;
@@ -78,7 +66,6 @@ function stringifyStructuredContent(value: unknown): string {
   try {
     return JSON.stringify(value, null, 2);
   } catch {
-    // Circular references or throwing getters — degrade instead of failing the call.
-    return String(value);
+    return String(value); // circular refs / throwing getters
   }
 }

@@ -44,8 +44,7 @@ describe("resolveMcpResultContent", () => {
   });
 
   it("treats an empty structuredContent object as a present payload", () => {
-    // Guards against an over-eager truthy check (`if (result.structuredContent)`)
-    // that would silently drop a legitimately empty object.
+    // guards against a truthy check that would drop a legitimately empty object
     expect(
       resolveMcpResultContent({ content: [], structuredContent: {} }),
     ).toEqual([{ type: "text", text: "{}" }]);
