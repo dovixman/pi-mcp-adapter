@@ -11,7 +11,7 @@ describe("resolveMcpResultContent", () => {
     expect(blocks).toEqual([{ type: "text", text: "hello" }]);
   });
 
-  it("falls back to structuredContent when content is empty (issue #113)", () => {
+  it("falls back to structuredContent when content is empty", () => {
     const structured = { status: "available", summary: "## Notes" };
     const blocks = resolveMcpResultContent({
       content: [],

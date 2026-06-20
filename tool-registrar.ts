@@ -47,7 +47,7 @@ export function transformMcpContent(content: McpContent[]): ContentBlock[] {
 
 /**
  * Resolve a tool result's content blocks, falling back to structuredContent
- * when content is empty (some servers send only structuredContent). See #113.
+ * when content is empty (some servers send only structuredContent).
  */
 // `Record<string, unknown>` (not the SDK `CallToolResult`) because its union
 // has a `{ toolResult }` variant with no `content`; the guards below stay safe.
